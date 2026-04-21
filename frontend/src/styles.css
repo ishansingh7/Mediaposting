@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: #102022;
+  background:
+    radial-gradient(circle at top left, rgba(255, 200, 87, 0.28), transparent 34rem),
+    radial-gradient(circle at 85% 10%, rgba(23, 107, 135, 0.18), transparent 32rem),
+    linear-gradient(135deg, #f9fbf7 0%, #edf4f1 52%, #f8efe7 100%);
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  color: #102022;
+  background: rgba(255, 200, 87, 0.7);
+}
+
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(22px);
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(95, 121, 110, 0.32);
+}
