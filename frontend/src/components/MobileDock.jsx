@@ -1,4 +1,4 @@
-import { Contact, Feather, Home, LogIn, Settings, UserRound } from 'lucide-react';
+import { Feather, Home, LogIn, Settings, UserRound } from 'lucide-react';
 import { useApp } from '../state/AppContext.jsx';
 
 export const MobileDock = () => {
@@ -8,7 +8,6 @@ export const MobileDock = () => {
   const items = [
     { label: 'Home', view: 'home', icon: Home },
     { label: 'Topics', view: 'categories', icon: Feather },
-    { label: 'Contact', view: 'contact', icon: Contact },
     { label: 'Profile', view: 'profile', icon: UserRound },
     isAdmin
       ? { label: 'Settings', view: 'settings', icon: Settings }
@@ -17,7 +16,7 @@ export const MobileDock = () => {
 
   return (
     <nav className="fixed inset-x-3 bottom-3 z-50 rounded-[1.4rem] border border-white/75 bg-white/85 p-2 shadow-glow backdrop-blur-2xl md:hidden">
-      <div className="grid grid-cols-5 gap-1">
+      <div className="grid grid-cols-4 gap-1">
         {items.map((item) => {
           const Icon = item.icon;
           const active = activeView === item.view;

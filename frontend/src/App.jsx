@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { Plus } from 'lucide-react';
 import { AdminDashboard } from './components/AdminDashboard.jsx';
 import { AdminLogin } from './components/AdminLogin.jsx';
 import { CategoriesPage } from './components/CategoriesPage.jsx';
@@ -26,14 +27,32 @@ const views = {
 };
 
 function App() {
-  const { activeView, toast, role } = useApp();
+  const { activeView, toast, role, setActiveView } = useApp();
   const protectedViews = ['dashboard', 'create', 'settings'];
   const activePage = protectedViews.includes(activeView) && role !== 'admin' ? 'login' : activeView;
+  const isAdmin = role === 'admin';
 
   return (
     <div className="min-h-screen bg-grid bg-[length:34px_34px]">
       <Navbar />
-      <main className="mx-auto grid w-full max-w-[1500px] grid-cols-1 gap-5 px-3 pb-28 pt-20 sm:px-4 md:pt-24 lg:grid-cols-[260px_minmax(0,1fr)] lg:pb-10 xl:grid-cols-[260px_minmax(0,1fr)_330px] xl:px-6">
+      {isAdmin ? (
+        <div className="fixed inset-x-3 top-[4.6rem] z-30 md:hidden">
+          <button
+            onClick={() => setActiveView('create')}
+            className={`flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-extrabold shadow-glow transition ${
+              activePage === 'create' ? 'bg-ink text-white' : 'bg-ember text-white active:scale-[0.98]'
+            }`}
+          >
+            <Plus size={18} />
+            Create Post
+          </button>
+        </div>
+      ) : null}
+      <main
+        className={`mx-auto grid w-full max-w-[1500px] grid-cols-1 gap-5 px-3 pb-28 sm:px-4 md:pt-24 lg:grid-cols-[260px_minmax(0,1fr)] lg:pb-10 xl:grid-cols-[260px_minmax(0,1fr)_330px] xl:px-6 ${
+          isAdmin ? 'pt-36' : 'pt-20'
+        }`}
+      >
         <LeftSidebar />
         <AnimatePresence mode="wait">
           <motion.section
