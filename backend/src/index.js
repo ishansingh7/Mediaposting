@@ -20,6 +20,14 @@ const adminToken = process.env.ADMIN_TOKEN || 'pulsepress-local-admin-token';
 app.use(cors());
 app.use(express.json({ limit: '12mb' }));
 
+app.get('/', (_req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'PulsePress MERN API',
+    health: '/api/health',
+  });
+});
+
 const isAdmin = (req) => req.header('x-admin-token') === adminToken;
 
 const requireAdmin = (req, res, next) => {
@@ -67,6 +75,13 @@ app.get('/api/health', (_req, res) => {
       'GET /api/admin/notifications',
       'PATCH /api/admin/notifications/read',
     ],
+  });
+});
+
+app.get('/health', (_req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'PulsePress MERN API',
   });
 });
 
