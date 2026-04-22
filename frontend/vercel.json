@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://mediaposting-1.onrender.com/api/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://mediaposting-1.onrender.com/health"
+    }
+  ]
+}
