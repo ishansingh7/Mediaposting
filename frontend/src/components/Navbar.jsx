@@ -62,7 +62,7 @@ export const Navbar = () => {
           {isAdmin ? (
             <button
               onClick={() => setActiveView('create')}
-              className="hidden items-center gap-2 rounded-full bg-ember px-4 py-2 text-sm font-extrabold text-white shadow-glow transition hover:-translate-y-0.5 md:flex"
+              className="hidden items-center gap-2 rounded-full bg-ember px-4 py-2 text-sm font-extrabold text-white shadow-glow transition hover:-translate-y-0.5 lg:flex"
             >
               <Plus size={17} />
               Create Post
