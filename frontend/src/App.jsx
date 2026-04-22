@@ -9,7 +9,9 @@ import { LeftSidebar } from './components/LeftSidebar.jsx';
 import { MobileDock } from './components/MobileDock.jsx';
 import { Navbar } from './components/Navbar.jsx';
 import { ProfilePage } from './components/ProfilePage.jsx';
+import { PostModal } from './components/PostModal.jsx';
 import { RightSidebar } from './components/RightSidebar.jsx';
+import { SettingsPage } from './components/SettingsPage.jsx';
 import { useApp } from './state/AppContext.jsx';
 
 const views = {
@@ -20,11 +22,12 @@ const views = {
   profile: <ProfilePage />,
   dashboard: <AdminDashboard />,
   create: <CreatePostForm />,
+  settings: <SettingsPage />,
 };
 
 function App() {
   const { activeView, toast, role } = useApp();
-  const protectedViews = ['dashboard', 'create'];
+  const protectedViews = ['dashboard', 'create', 'settings'];
   const activePage = protectedViews.includes(activeView) && role !== 'admin' ? 'login' : activeView;
 
   return (
@@ -47,6 +50,7 @@ function App() {
         <RightSidebar />
       </main>
       <MobileDock />
+      <PostModal />
       <AnimatePresence>
         {toast ? (
           <motion.div

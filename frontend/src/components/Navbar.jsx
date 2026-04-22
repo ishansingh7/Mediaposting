@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { Contact, Feather, LayoutGrid, LogIn, LogOut, Plus, ShieldCheck, UserRound } from 'lucide-react';
+import { Contact, Feather, LayoutGrid, LogIn, LogOut, Plus, Settings, ShieldCheck, UserRound } from 'lucide-react';
 import { useApp } from '../state/AppContext.jsx';
+import { NotificationBell } from './NotificationBell.jsx';
 
 export const Navbar = () => {
   const { role, logoutAdmin, profile, setActiveView, activeView, setSelectedCategory } = useApp();
@@ -11,6 +12,7 @@ export const Navbar = () => {
     { label: 'Categories', view: 'categories', icon: Feather },
     { label: 'Contact', view: 'contact', icon: Contact },
     { label: 'Profile', view: 'profile', icon: UserRound },
+    ...(isAdmin ? [{ label: 'Settings', view: 'settings', icon: Settings }] : []),
   ];
 
   return (
@@ -66,6 +68,7 @@ export const Navbar = () => {
               Create Post
             </button>
           ) : null}
+          {isAdmin ? <NotificationBell /> : null}
           <button
             onClick={() => (isAdmin ? logoutAdmin() : setActiveView('login'))}
             className="flex items-center gap-2 rounded-full border border-white/80 bg-white/75 px-3 py-2 text-xs font-extrabold text-ink shadow-sm transition hover:bg-ink hover:text-white sm:text-sm"

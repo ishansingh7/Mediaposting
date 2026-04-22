@@ -5,8 +5,8 @@ import { Card } from './ui.jsx';
 
 export const AdminLogin = () => {
   const { loginAdmin, showToast } = useApp();
-  const [email, setEmail] = useState('admin@pulsepress.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const submit = async (event) => {
@@ -38,8 +38,10 @@ export const AdminLogin = () => {
         <label className="grid gap-2 text-sm font-extrabold text-ink">
           Admin Email
           <input
+            type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            placeholder="Enter your admin email"
             className="rounded-2xl border border-white bg-white/75 px-4 py-3 font-semibold outline-none focus:border-ocean"
           />
         </label>
@@ -49,6 +51,7 @@ export const AdminLogin = () => {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            placeholder="Enter admin password"
             className="rounded-2xl border border-white bg-white/75 px-4 py-3 font-semibold outline-none focus:border-ocean"
           />
         </label>

@@ -1,4 +1,4 @@
-import { BarChart3, Compass, Home, Layers3, LogIn, MessageSquare, PlusCircle, UserRound } from 'lucide-react';
+import { BarChart3, Compass, Home, Layers3, LogIn, MessageSquare, PlusCircle, Settings, UserRound } from 'lucide-react';
 import { useApp } from '../state/AppContext.jsx';
 import { Card } from './ui.jsx';
 
@@ -15,6 +15,7 @@ export const LeftSidebar = () => {
       ? [
           { label: 'Dashboard', view: 'dashboard', icon: BarChart3 },
           { label: 'Create Post', view: 'create', icon: PlusCircle },
+          { label: 'Settings', view: 'settings', icon: Settings },
         ]
       : [{ label: 'Admin Login', view: 'login', icon: LogIn }]),
   ];

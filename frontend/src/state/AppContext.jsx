@@ -23,6 +23,10 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState(getLikedPosts);
   const [toast, setToast] = useState('');
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [lastNotificationId, setLastNotificationId] = useState('');
 
   const refresh = useCallback(async (token = adminToken) => {
     setLoading(true);
@@ -49,6 +53,57 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('liked-posts', JSON.stringify([...likedPosts]));
   }, [likedPosts]);
 
+  const refreshNotifications = useCallback(async () => {
+    if (role !== 'admin' || !adminToken) return;
+    const data = await api.getNotifications(adminToken);
+    const nextNotifications = data.notifications || [];
+    setNotifications(nextNotifications);
+    setUnreadNotifications(data.unreadCount || 0);
+    setLastNotificationId((current) => current || nextNotifications[0]?.id || '');
+  }, [adminToken, role]);
+
+  useEffect(() => {
+    refreshNotifications().catch(() => {});
+  }, [refreshNotifications]);
+
+  useEffect(() => {
+    if (role === 'admin' && adminToken) {
+      api.getNotifications(adminToken)
+        .then((data) => {
+          const nextNotifications = data.notifications || [];
+          setNotifications(nextNotifications);
+          setUnreadNotifications(data.unreadCount || 0);
+          setLastNotificationId(nextNotifications[0]?.id || '');
+        })
+        .catch(() => {});
+    }
+  }, [adminToken, role]);
+
+  useEffect(() => {
+    if (role !== 'admin' || !adminToken) return undefined;
+
+    const pollNotifications = async () => {
+      const data = await api.getNotifications(adminToken);
+      const nextNotifications = data.notifications || [];
+      const newestId = nextNotifications[0]?.id || '';
+
+      setNotifications(nextNotifications);
+      setUnreadNotifications(data.unreadCount || 0);
+      setLastNotificationId((current) => {
+        if (current && newestId && newestId !== current) {
+          showToast('New like or comment received.');
+        }
+        return newestId || current;
+      });
+    };
+
+    const intervalId = window.setInterval(() => {
+      pollNotifications().catch(() => {});
+    }, 4000);
+
+    return () => window.clearInterval(intervalId);
+  }, [adminToken, role]);
+
   const showToast = (message) => {
     setToast(message);
     window.setTimeout(() => setToast(''), 2800);
@@ -69,6 +124,9 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem('admin-token');
     setAdminToken('');
     setRole('visitor');
+    setNotifications([]);
+    setUnreadNotifications(0);
+    setLastNotificationId('');
     setActiveView('home');
     showToast('Logged out. Visitor mode is active.');
   };
@@ -103,8 +161,11 @@ export const AppProvider = ({ children }) => {
   const openPost = async (id) => {
     const post = await api.openPost(id, adminToken);
     setPosts((current) => current.map((item) => (item.id === id ? post : item)));
+    setSelectedPost(post);
     return post;
   };
+
+  const closePost = () => setSelectedPost(null);
 
   const toggleLike = async (id) => {
     const nextLiked = !likedPosts.has(id);
@@ -119,8 +180,10 @@ export const AppProvider = ({ children }) => {
         post.id === id ? { ...post, likes: Math.max(0, post.likes + (nextLiked ? 1 : -1)) } : post,
       ),
     );
-    const result = await api.likePost(id, nextLiked);
+    const result = await api.likePost(id, nextLiked, role === 'admin' ? profile?.name : 'A visitor');
     setPosts((current) => current.map((post) => (post.id === id ? { ...post, likes: result.likes } : post)));
+    setSelectedPost((current) => (current?.id === id ? { ...current, likes: result.likes } : current));
+    refreshNotifications().catch(() => {});
   };
 
   const addComment = async (id, payload) => {
@@ -128,6 +191,17 @@ export const AppProvider = ({ children }) => {
     setPosts((current) =>
       current.map((post) => (post.id === id ? { ...post, comments: [comment, ...post.comments] } : post)),
     );
+    setSelectedPost((current) =>
+      current?.id === id ? { ...current, comments: [comment, ...current.comments] } : current,
+    );
+    refreshNotifications().catch(() => {});
+  };
+
+  const markNotificationsRead = async () => {
+    if (!requireAdminAction()) return;
+    await api.markNotificationsRead(adminToken);
+    setUnreadNotifications(0);
+    setNotifications((current) => current.map((notification) => ({ ...notification, read: true })));
   };
 
   const createPost = async (payload) => {
@@ -167,6 +241,32 @@ export const AppProvider = ({ children }) => {
     showToast('Profile updated.');
   };
 
+  const getAdminAccount = async () => {
+    if (!requireAdminAction()) return null;
+    return api.getAdminAccount(adminToken);
+  };
+
+  const updateAdminAccount = async (payload) => {
+    if (!requireAdminAction()) return null;
+    const account = await api.updateAdminAccount(adminToken, payload);
+    showToast('Admin login details updated.');
+    return account;
+  };
+
+  const createAdminAccount = async (payload) => {
+    if (!requireAdminAction()) return null;
+    const account = await api.createAdminAccount(adminToken, payload);
+    showToast('New admin login added.');
+    return account;
+  };
+
+  const deleteAdminAccount = async (email, payload) => {
+    if (!requireAdminAction()) return null;
+    await api.deleteAdminAccount(adminToken, email, payload);
+    showToast('Admin login removed.');
+    return true;
+  };
+
   const value = {
     role,
     adminToken,
@@ -187,7 +287,13 @@ export const AppProvider = ({ children }) => {
     mostViewed,
     trending,
     toast,
+    selectedPost,
+    notifications,
+    unreadNotifications,
+    refreshNotifications,
+    markNotificationsRead,
     openPost,
+    closePost,
     toggleLike,
     addComment,
     createPost,
@@ -195,6 +301,10 @@ export const AppProvider = ({ children }) => {
     deletePost,
     updateVisibility,
     updateProfile,
+    getAdminAccount,
+    updateAdminAccount,
+    createAdminAccount,
+    deleteAdminAccount,
     showToast,
     refresh,
   };

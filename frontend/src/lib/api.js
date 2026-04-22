@@ -26,6 +26,37 @@ export const api = {
       headers: headers(),
       body: JSON.stringify(payload),
     }),
+  getAdminAccount: (token) =>
+    request('/api/admin/account', {
+      headers: headers(token),
+    }),
+  updateAdminAccount: (token, payload) =>
+    request('/api/admin/account', {
+      method: 'PUT',
+      headers: headers(token),
+      body: JSON.stringify(payload),
+    }),
+  createAdminAccount: (token, payload) =>
+    request('/api/admin/accounts', {
+      method: 'POST',
+      headers: headers(token),
+      body: JSON.stringify(payload),
+    }),
+  deleteAdminAccount: (token, email, payload) =>
+    request(`/api/admin/accounts/${encodeURIComponent(email)}`, {
+      method: 'DELETE',
+      headers: headers(token),
+      body: JSON.stringify(payload),
+    }),
+  getNotifications: (token) =>
+    request('/api/admin/notifications', {
+      headers: headers(token),
+    }),
+  markNotificationsRead: (token) =>
+    request('/api/admin/notifications/read', {
+      method: 'PATCH',
+      headers: headers(token),
+    }),
   bootstrap: (token) =>
     request('/api/bootstrap', {
       headers: headers(token),
@@ -57,11 +88,11 @@ export const api = {
       headers: headers(token),
       body: JSON.stringify({ hidden }),
     }),
-  likePost: (id, liked) =>
+  likePost: (id, liked, actorName) =>
     request(`/api/posts/${id}/like`, {
       method: 'POST',
       headers: headers(),
-      body: JSON.stringify({ liked }),
+      body: JSON.stringify({ liked, actorName }),
     }),
   commentPost: (id, payload) =>
     request(`/api/posts/${id}/comments`, {

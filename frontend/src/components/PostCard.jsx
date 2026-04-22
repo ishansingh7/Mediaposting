@@ -18,14 +18,14 @@ export const PostCard = ({ post }) => {
     showToast,
   } = useApp();
   const [commentsOpen, setCommentsOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const [editing, setEditing] = useState(false);
   const liked = likedPosts.has(post.id);
   const isAdmin = role === 'admin';
+  const previewLimit = 170;
+  const hasLongDescription = post.content.length > previewLimit;
 
   const handleOpen = async () => {
     await openPost(post.id);
-    setExpanded((current) => !current);
   };
 
   const share = async () => {
@@ -90,16 +90,31 @@ export const PostCard = ({ post }) => {
 
       <button onClick={handleOpen} className="mt-4 block w-full text-left">
         <h2 className="font-display text-xl font-bold leading-tight text-ink sm:text-2xl md:text-3xl">{post.title}</h2>
-        <div className="mt-4 overflow-hidden rounded-[1.6rem]">
-          <img src={post.image} alt={post.title} className="h-56 w-full object-cover transition duration-500 hover:scale-105 sm:h-72 md:h-96" />
-        </div>
+        <p className="mt-3 text-[15px] font-medium leading-7 text-ink/75">
+          {post.content.slice(0, previewLimit)}
+          {hasLongDescription ? '... ' : ''}
+          {hasLongDescription ? (
+            <span className="font-extrabold text-ocean underline decoration-ocean/30 underline-offset-4">
+              Read more
+            </span>
+          ) : null}
+        </p>
+        <figure className="mt-4 overflow-hidden rounded-[1.6rem] border border-white/80 bg-white p-2 shadow-sm">
+          <div className="grid h-64 place-items-center overflow-hidden rounded-[1.2rem] bg-mist sm:h-80 md:h-[420px]">
+            <img
+              src={post.image}
+              alt={post.title}
+              className="h-full w-full object-contain transition duration-500 hover:scale-[1.03]"
+            />
+          </div>
+          <figcaption className="px-3 py-3 text-xs font-black uppercase tracking-[0.18em] text-moss">
+            {post.category} · {shortDate(post.createdAt)}
+          </figcaption>
+        </figure>
       </button>
 
-      <p className="mt-4 text-[15px] font-medium leading-7 text-ink/75">
-        {expanded ? post.content : `${post.content.slice(0, 180)}${post.content.length > 180 ? '...' : ''}`}
-      </p>
       <button onClick={handleOpen} className="mt-2 text-sm font-extrabold text-ocean hover:text-ember">
-        {expanded ? 'Collapse story' : 'Open story'}
+        Open full story
       </button>
 
       <div className="mt-4 grid grid-cols-2 gap-2 border-t border-ink/10 pt-4 sm:grid-cols-4">

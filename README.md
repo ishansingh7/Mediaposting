@@ -32,11 +32,53 @@ npm.cmd run client
 
 The frontend uses `http://localhost:4000` as the default API URL in development. You can override it with `VITE_API_URL`.
 
+## Share With Ngrok
+
+Run the app locally first:
+
+```bash
+npm.cmd run dev
+```
+
+In another terminal, expose the backend:
+
+```bash
+npm.cmd run tunnel:backend
+```
+
+Copy the backend ngrok URL, then create or edit `frontend\.env`:
+
+```env
+VITE_API_URL=https://your-backend-url.ngrok-free.app
+```
+
+Restart the frontend/dev server so Vite reads the new env value:
+
+```bash
+npm.cmd run dev
+```
+
+In another terminal, expose the frontend:
+
+```bash
+npm.cmd run tunnel:frontend
+```
+
+Share the frontend ngrok URL with another computer.
+
+You can also start both tunnels together:
+
+```bash
+npm.cmd run tunnel
+```
+
+If ngrok asks for login/authtoken, install or configure ngrok from your ngrok dashboard, then rerun the same commands.
+
 ## Features
 
 - Visitor mode: browse posts, like, comment, share, view profile, filter categories.
 - Admin login: default local credentials are `admin@pulsepress.com` / `admin123`.
-- Admin mode: create posts with image upload, edit, delete, hide/unhide, view dashboard analytics, manage profile, upload avatar and cover photo.
+- Admin mode: create posts with image upload, edit, delete, hide/unhide, view dashboard analytics, manage profile, upload avatar and cover photo, change admin login email/password.
 - Social feed: latest-first post cards, animated likes, expandable comments, view increments on open.
 - Right sidebar: dynamic categories, most liked, most viewed, and trending posts.
 - Profile page: Facebook-style cover, overlapping avatar, tabs for posts/about/activity, admin-only editing.
@@ -62,4 +104,4 @@ backend/
 package.json      Root workspace scripts for running both apps
 ```
 
-The backend now stores posts, profile data, likes, views, comments, and hidden state in MongoDB. On first startup, it seeds MongoDB from `backend/src/seed.js`.
+The backend now stores posts, profile data, likes, views, comments, hidden state, and admin login credentials in MongoDB. On first startup, it seeds MongoDB from `backend/src/seed.js` and `backend/.env`.

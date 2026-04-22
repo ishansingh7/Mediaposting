@@ -12,7 +12,10 @@
     "server": "npm run dev -w backend",
     "build": "npm run build -w frontend",
     "preview": "npm run preview -w frontend",
-    "lint": "npm run lint -w frontend"
+    "lint": "npm run lint -w frontend",
+    "tunnel:frontend": "npx ngrok http 5173",
+    "tunnel:backend": "npx ngrok http 4000",
+    "tunnel": "concurrently \"npm run tunnel:backend\" \"npm run tunnel:frontend\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

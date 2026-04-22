@@ -20,7 +20,7 @@ export const AdminDashboard = () => {
             <div>
               <h1 className="font-display text-4xl font-bold">Control every story, signal, and conversation.</h1>
               <p className="mt-3 max-w-2xl text-sm font-medium leading-7 text-white/70">
-                Manage visibility, monitor engagement, and create new posts without exposing controls to visitors.
+                Manage visibility, monitor engagement, and publishing controls.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">

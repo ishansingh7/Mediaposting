@@ -1,4 +1,4 @@
-import { Contact, Feather, Home, LogIn, PlusCircle, UserRound } from 'lucide-react';
+import { Contact, Feather, Home, LogIn, Settings, UserRound } from 'lucide-react';
 import { useApp } from '../state/AppContext.jsx';
 
 export const MobileDock = () => {
@@ -11,7 +11,7 @@ export const MobileDock = () => {
     { label: 'Contact', view: 'contact', icon: Contact },
     { label: 'Profile', view: 'profile', icon: UserRound },
     isAdmin
-      ? { label: 'Create', view: 'create', icon: PlusCircle }
+      ? { label: 'Settings', view: 'settings', icon: Settings }
       : { label: 'Login', view: 'login', icon: LogIn },
   ];
 
